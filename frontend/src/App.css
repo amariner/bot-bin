@@ -242,3 +242,27 @@ tr:last-child td { border-bottom: none; }
   .market-list li { gap: 8px; font-size: 12px; }
   .ml-vol { display: none; }
 }
+
+/* ---------- registro y análisis ---------- */
+.logpanel { display: flex; flex-direction: column; gap: 12px; }
+.logpanel .grid { margin: 0; }
+.conclusiones { margin: 0; padding-left: 18px; font-size: 13px; line-height: 1.6; }
+.conclusiones li { margin: 6px 0; }
+.conclusiones li.ajuste { color: var(--accent); font-weight: 600; }
+.conclusiones li.aviso { color: #e8b93d; font-weight: 600; }
+
+.log-head {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 12px; flex-wrap: wrap; margin-bottom: 10px;
+}
+.log-head h2 { margin: 0; }
+.log-filtros { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+.log-filtros .tab { padding: 5px 11px; font-size: 12px; }
+.log-auto { display: flex; align-items: center; gap: 5px; font-size: 11.5px; color: var(--dim); }
+.log-feed { max-height: 460px; }
+
+@media (max-width: 640px) {
+  .log-head { flex-direction: column; align-items: flex-start; }
+  .log-filtros { overflow-x: auto; width: 100%; }
+  .log-filtros .tab { white-space: nowrap; }
+}

@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { BacktestPanel } from './BacktestPanel'
 import { Coin } from './CoinIcon'
 import { EquityChart } from './EquityChart'
+import { LogPanel } from './LogPanel'
 import { MarketPanel } from './MarketList'
 import { Narrator } from './Narrator'
 import { ValidationPanel } from './ValidationPanel'
@@ -292,7 +293,7 @@ function Diagnostics({ state }: { state: BotState | null }) {
 export default function App() {
   const { state, connected } = useBotSocket()
   const [equityHistory, setEquityHistory] = useState<{ ts: number; equity: number }[]>([])
-  const [tab, setTab] = useState<'live' | 'validation' | 'backtest'>('live')
+  const [tab, setTab] = useState<'live' | 'log' | 'validation' | 'backtest'>('live')
 
   const loadHistory = useCallback(() => {
     const since = Date.now() - 7 * 86_400_000
@@ -347,6 +348,9 @@ export default function App() {
         <button className={tab === 'live' ? 'tab on' : 'tab'} onClick={() => setTab('live')}>
           En vivo
         </button>
+        <button className={tab === 'log' ? 'tab on' : 'tab'} onClick={() => setTab('log')}>
+          Registro y análisis
+        </button>
         <button className={tab === 'validation' ? 'tab on' : 'tab'}
                 onClick={() => setTab('validation')}>
           Búsqueda de estrategia
@@ -356,7 +360,9 @@ export default function App() {
         </button>
       </div>
 
-      {tab === 'validation' ? (
+      {tab === 'log' ? (
+        <LogPanel />
+      ) : tab === 'validation' ? (
         <section>
           <div className="card">
             <h2>Búsqueda y validación de estrategia</h2>

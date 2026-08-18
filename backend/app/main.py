@@ -3,6 +3,7 @@ import asyncio
 import json
 import logging
 import os
+import time
 from typing import Optional
 
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
@@ -10,6 +11,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
+from .analysis import analyse
 from .config import settings
 from .db import Database
 from .strategy import STRATEGIES, describe_strategies
@@ -69,9 +71,28 @@ async def trades(limit: int = 100):
 
 
 @app.get("/api/events")
-async def events(limit: int = 100):
-    """Historial persistente de actividad (compras, ventas, señales descartadas)."""
-    return db.recent_events(limit)
+async def events(limit: int = 100, type: Optional[str] = None):
+    """Registro persistente de actividad (compras, ventas, señales descartadas)."""
+    rows = db.recent_events(min(limit, 1000))
+    if type:
+        wanted = set(type.split(","))
+        rows = [r for r in rows if r["type"] in wanted]
+    return rows
+
+
+@app.get("/api/analysis")
+async def analysis(hours: int = 0):
+    """Registro agregado en conclusiones. Pensado tanto para la pestaña
+    'Análisis' de la interfaz como para consultarlo en remoto y decidir
+    mejoras con datos en vez de con intuiciones."""
+    since = int(time.time() * 1000) - hours * 3_600_000 if hours else 0
+    return analyse(
+        events=db.recent_events(2000),
+        trades=db.recent_trades(1000),
+        equity=db.equity_history(since_ts=since, limit=5000),
+        state=trader.state_snapshot(),
+        since_ts=since,
+    )
 
 
 @app.get("/api/equity")
