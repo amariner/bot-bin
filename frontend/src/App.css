@@ -127,21 +127,40 @@ tr:last-child td { border-bottom: none; }
   color: #fff; font-weight: 800; letter-spacing: -0.3px; line-height: 1;
 }
 
-/* ---------- narrador en lenguaje llano ---------- */
+/* ---------- explicación plegable (icono ⓘ) ---------- */
 .narrator {
   background: linear-gradient(180deg, rgba(79,142,247,0.10), rgba(79,142,247,0.03));
   border: 1px solid rgba(79,142,247,0.35);
-  border-radius: 12px; padding: 14px 16px; margin-bottom: 14px;
-  font-size: 13.5px; line-height: 1.6;
+  border-radius: 12px; margin-bottom: 14px; overflow: hidden;
 }
 .narrator.warn { background: rgba(232,185,61,0.08); border-color: #e8b93d; }
 .narrator.bad { background: rgba(246,70,93,0.08); border-color: var(--red); }
-.narrator-main { margin-bottom: 8px; }
-.narrator-list { margin: 0; padding-left: 18px; color: var(--dim); }
-.narrator-list li { margin: 5px 0; }
-.narrator-list b { color: var(--text); }
-.narrator-list b.pos { color: var(--green); }
-.narrator-list b.neg { color: var(--red); }
+
+.narrator-linea {
+  width: 100%; display: flex; align-items: center; gap: 10px;
+  background: none; border: none; color: var(--text); text-align: left;
+  padding: 11px 14px; font-size: 13.5px; line-height: 1.5; cursor: pointer;
+}
+.narrator-linea:hover { background: rgba(79,142,247,0.06); }
+.narrator-icono { font-size: 16px; color: var(--accent); flex: 0 0 auto; }
+.narrator.warn .narrator-icono, .narrator.bad .narrator-icono { color: inherit; }
+.narrator-resumen { flex: 1; }
+.narrator-caret { color: var(--dim); font-size: 11px; flex: 0 0 auto; }
+
+.narrator-detalle {
+  padding: 2px 16px 16px 40px; font-size: 13px; line-height: 1.6;
+  border-top: 1px solid rgba(79,142,247,0.2);
+}
+.narrator-detalle h4 {
+  margin: 14px 0 4px; font-size: 11px; color: var(--accent);
+  text-transform: uppercase; letter-spacing: 0.6px; font-weight: 700;
+}
+.narrator-detalle p { margin: 0; color: var(--dim); }
+.narrator-detalle ul, .narrator-detalle ol { margin: 0; padding-left: 18px; color: var(--dim); }
+.narrator-detalle li { margin: 3px 0; }
+.narrator-detalle b { color: var(--text); }
+.narrator-detalle b.pos { color: var(--green); }
+.narrator-detalle b.neg { color: var(--red); }
 
 /* Las tablas anchas hacen scroll dentro de su tarjeta, nunca la página entera */
 .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
@@ -182,8 +201,9 @@ tr:last-child td { border-bottom: none; }
   .stats > .stat:first-child { grid-column: 1 / -1; }
   .stats > .stat:first-child .stat-value { font-size: 22px; }
 
-  .narrator { padding: 12px 13px; font-size: 13px; border-radius: 10px; }
-  .narrator-list { padding-left: 16px; }
+  .narrator { border-radius: 10px; }
+  .narrator-linea { padding: 10px 12px; font-size: 12.5px; }
+  .narrator-detalle { padding: 2px 12px 12px 12px; font-size: 12.5px; }
 
   .diag { gap: 6px 14px; padding: 8px 11px; font-size: 11.5px; }
 
