@@ -101,7 +101,29 @@ Dónde sí encaja:
 | Fly.io / Railway (contenedor always-on) | ~5 $/mes | Fácil de desplegar, elegir región UE |
 | Mac/miniPC en casa encendido | 0 € | Con Docker o launchd; acceso remoto vía Cloudflare Tunnel |
 
-Con Docker (ya incluido en el repo):
+### Railway (paso a paso)
+
+1. **New Project → Deploy from GitHub repo →** `amariner/bot-bin`. Railway
+   detecta el `Dockerfile` y el `railway.json` (healthcheck `/health`,
+   reinicio automático).
+2. **⚠️ Cambia la región a Europa ANTES de desplegar**: Settings → Deploy →
+   Region → *Europe West (Amsterdam)*. Por defecto Railway despliega en
+   EE. UU. y **Binance responde HTTP 451 a las IPs estadounidenses**: el bot
+   arrancaría con error de universo vacío.
+3. **Añade un volumen** para que las operaciones sobrevivan a cada redeploy:
+   en el servicio, Settings → Volumes → New Volume, punto de montaje `/data`.
+4. **Genera el dominio**: Settings → Networking → Generate Domain.
+5. Redeploy. El bot arranca solo (`BOT_AUTOSTART=1` ya viene en la imagen).
+
+Variables opcionales (Settings → Variables): `BOT_INITIAL_CAPITAL`,
+`BOT_DEFAULT_STRATEGY`, `BOT_TIMEFRAME`, `BOT_RISK_PER_TRADE`,
+`BOT_DAILY_MAX_LOSS_PCT`. `BOT_AUTOSTART=0` si prefieres arrancarlo a mano.
+
+**Aviso**: el dominio de Railway es público y sin contraseña. Con paper
+trading no hay dinero en juego, pero cualquiera con la URL podría parar el
+bot. Ver "Autenticación" más abajo.
+
+### Docker en local o en un VPS
 
 ```bash
 docker compose up -d --build
@@ -110,12 +132,19 @@ docker compose up -d --build
 Eso compila frontend+backend, arranca el bot solo (`BOT_AUTOSTART=1`), guarda el
 estado en `./botdata/` y se relanza tras reinicios del servidor.
 
-**Autenticación**: no expongas el puerto 8000 a internet tal cual. Lo más simple
-y sólido es ponerlo detrás de **Cloudflare Tunnel + Cloudflare Access** (gratis:
-la URL pública pide login con tu email/Google antes de llegar al panel, y el
-websocket funciona a través del túnel) o usar **Tailscale** si solo quieres
-acceder tú desde tus dispositivos sin URL pública. Ahí es donde Cloudflare sí
-encaja: como puerta de entrada, no como plataforma de ejecución.
+### Autenticación
+
+El panel no lleva login todavía. Opciones, de menos a más trabajo:
+
+1. **Basic auth en FastAPI** con usuario/contraseña por variable de entorno.
+   Es lo más rápido y sirve para Railway tal cual.
+2. **Cloudflare Tunnel + Access** (gratis) si tienes un dominio en Cloudflare:
+   la URL pide login con tu email/Google antes de llegar al panel y el
+   websocket funciona a través del túnel. Aquí es donde Cloudflare encaja:
+   como puerta de entrada, no como plataforma de ejecución (el bot es un
+   proceso largo con websockets, no un Worker).
+3. **Tailscale** si solo quieres acceder tú desde tus dispositivos, sin URL
+   pública.
 
 **Limitación conocida**: si el proceso se reinicia con posiciones abiertas, esas
 posiciones no se recuperan (el historial de operaciones cerradas sí). Está en la
