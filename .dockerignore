@@ -1,0 +1,12 @@
+# Fuera de la imagen: acelera el build y evita subir 64 MB de caché
+backend/.venv/
+backend/data/
+backend/tests/
+botdata/
+frontend/node_modules/
+frontend/dist/
+__pycache__/
+*.pyc
+.pytest_cache/
+.git/
+.DS_Store

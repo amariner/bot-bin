@@ -1,0 +1,125 @@
+{
+ "generated_at": 1787042122265,
+ "timeframe": "4h",
+ "finalists": [
+  "lb20 v4.0 sl2.0 trail3.0 atr>0.5% atr<6% +BTC",
+  "lb20 v4.0 sl2.0 trail3.0 +BTC",
+  "lb20 v4.0 sl2.0 trail3.0 atr>0.5% +BTC"
+ ],
+ "time_holdout_results": {
+  "0.001": [
+   {
+    "name": "lb20 v4.0 sl2.0 trail3.0 atr>0.5% atr<6% +BTC",
+    "return_pct": 1.58,
+    "profit_factor": 1.1,
+    "trades": 28,
+    "max_drawdown_pct": 8.4
+   },
+   {
+    "name": "lb20 v4.0 sl2.0 trail3.0 +BTC",
+    "return_pct": 9.4,
+    "profit_factor": 1.5,
+    "trades": 33,
+    "max_drawdown_pct": 7.79
+   },
+   {
+    "name": "lb20 v4.0 sl2.0 trail3.0 atr>0.5% +BTC",
+    "return_pct": 9.4,
+    "profit_factor": 1.5,
+    "trades": 33,
+    "max_drawdown_pct": 7.79
+   }
+  ],
+  "0.00075": [
+   {
+    "name": "lb20 v4.0 sl2.0 trail3.0 atr>0.5% atr<6% +BTC",
+    "return_pct": 1.82,
+    "profit_factor": 1.12,
+    "trades": 28,
+    "max_drawdown_pct": 8.22
+   },
+   {
+    "name": "lb20 v4.0 sl2.0 trail3.0 +BTC",
+    "return_pct": 9.67,
+    "profit_factor": 1.52,
+    "trades": 33,
+    "max_drawdown_pct": 7.7
+   },
+   {
+    "name": "lb20 v4.0 sl2.0 trail3.0 atr>0.5% +BTC",
+    "return_pct": 9.67,
+    "profit_factor": 1.52,
+    "trades": 33,
+    "max_drawdown_pct": 7.7
+   }
+  ]
+ },
+ "benchmark_time_holdout": 19.04,
+ "benchmark_fresh_symbols": -31.34,
+ "time_holdout_period": [
+  1781856000000,
+  1787025600001
+ ],
+ "fresh_symbols": 31,
+ "fresh_results": {
+  "0.001": [
+   {
+    "name": "lb20 v4.0 sl2.0 trail3.0 atr>0.5% atr<6% +BTC",
+    "return_pct": -2.9,
+    "profit_factor": 0.97,
+    "trades": 146,
+    "max_drawdown_pct": 25.34,
+    "win_rate_pct": 25.3,
+    "positive_days_pct": 28.6
+   },
+   {
+    "name": "lb20 v4.0 sl2.0 trail3.0 +BTC",
+    "return_pct": 2.66,
+    "profit_factor": 1.03,
+    "trades": 152,
+    "max_drawdown_pct": 25.36,
+    "win_rate_pct": 26.3,
+    "positive_days_pct": 31.0
+   },
+   {
+    "name": "lb20 v4.0 sl2.0 trail3.0 atr>0.5% +BTC",
+    "return_pct": 2.66,
+    "profit_factor": 1.03,
+    "trades": 152,
+    "max_drawdown_pct": 25.36,
+    "win_rate_pct": 26.3,
+    "positive_days_pct": 31.0
+   }
+  ],
+  "0.00075": [
+   {
+    "name": "lb20 v4.0 sl2.0 trail3.0 atr>0.5% atr<6% +BTC",
+    "return_pct": -1.72,
+    "profit_factor": 0.98,
+    "trades": 146,
+    "max_drawdown_pct": 25.07,
+    "win_rate_pct": 25.3,
+    "positive_days_pct": 28.6
+   },
+   {
+    "name": "lb20 v4.0 sl2.0 trail3.0 +BTC",
+    "return_pct": 3.92,
+    "profit_factor": 1.04,
+    "trades": 152,
+    "max_drawdown_pct": 25.09,
+    "win_rate_pct": 26.3,
+    "positive_days_pct": 31.0
+   },
+   {
+    "name": "lb20 v4.0 sl2.0 trail3.0 atr>0.5% +BTC",
+    "return_pct": 3.92,
+    "profit_factor": 1.04,
+    "trades": 152,
+    "max_drawdown_pct": 25.09,
+    "win_rate_pct": 26.3,
+    "positive_days_pct": 31.0
+   }
+  ]
+ },
+ "verdict": "fail"
+}

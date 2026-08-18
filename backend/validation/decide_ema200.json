@@ -1,0 +1,140 @@
+{
+ "generated_at": 1787045774336,
+ "period": [
+  1745573774336,
+  1766309774336
+ ],
+ "fee": 0.00075,
+ "criteria": {
+  "group_wins": 0,
+  "plateau_ok": true,
+  "bull_ok": true,
+  "bull_avg_diff": 5.01
+ },
+ "adopt": false,
+ "groups": {
+  "monedas 1-40": {
+   "benchmark": 17.41,
+   "n": 24,
+   "results": [
+    {
+     "name": "lb20 v4.0 sl2.0 trail3.0 +BTC",
+     "return_pct": 21.91,
+     "profit_factor": 1.42,
+     "trades": 92,
+     "max_drawdown_pct": 16.83
+    },
+    {
+     "name": "lb20 v4.0 sl2.0 trail3.0 ema150 +BTC",
+     "return_pct": 12.94,
+     "profit_factor": 1.35,
+     "trades": 69,
+     "max_drawdown_pct": 12.23
+    },
+    {
+     "name": "lb20 v4.0 sl2.0 trail3.0 ema200 +BTC",
+     "return_pct": 15.6,
+     "profit_factor": 1.47,
+     "trades": 61,
+     "max_drawdown_pct": 10.64
+    },
+    {
+     "name": "lb20 v4.0 sl2.0 trail3.0 ema250 +BTC",
+     "return_pct": 17.4,
+     "profit_factor": 1.54,
+     "trades": 61,
+     "max_drawdown_pct": 9.73
+    },
+    {
+     "name": "lb20 v4.0 sl2.0 trail3.0 ema100 +BTC",
+     "return_pct": 15.49,
+     "profit_factor": 1.35,
+     "trades": 79,
+     "max_drawdown_pct": 14.87
+    }
+   ]
+  },
+  "monedas 41-80": {
+   "benchmark": -44.27,
+   "n": 26,
+   "results": [
+    {
+     "name": "lb20 v4.0 sl2.0 trail3.0 +BTC",
+     "return_pct": 11.4,
+     "profit_factor": 1.16,
+     "trades": 117,
+     "max_drawdown_pct": 18.79
+    },
+    {
+     "name": "lb20 v4.0 sl2.0 trail3.0 ema150 +BTC",
+     "return_pct": -5.78,
+     "profit_factor": 0.88,
+     "trades": 89,
+     "max_drawdown_pct": 14.82
+    },
+    {
+     "name": "lb20 v4.0 sl2.0 trail3.0 ema200 +BTC",
+     "return_pct": -5.09,
+     "profit_factor": 0.88,
+     "trades": 79,
+     "max_drawdown_pct": 18.09
+    },
+    {
+     "name": "lb20 v4.0 sl2.0 trail3.0 ema250 +BTC",
+     "return_pct": -6.77,
+     "profit_factor": 0.83,
+     "trades": 73,
+     "max_drawdown_pct": 19.78
+    },
+    {
+     "name": "lb20 v4.0 sl2.0 trail3.0 ema100 +BTC",
+     "return_pct": -15.53,
+     "profit_factor": 0.72,
+     "trades": 100,
+     "max_drawdown_pct": 18.62
+    }
+   ]
+  },
+  "monedas 81-120": {
+   "benchmark": -46.3,
+   "n": 22,
+   "results": [
+    {
+     "name": "lb20 v4.0 sl2.0 trail3.0 +BTC",
+     "return_pct": -8.1,
+     "profit_factor": 0.85,
+     "trades": 107,
+     "max_drawdown_pct": 25.51
+    },
+    {
+     "name": "lb20 v4.0 sl2.0 trail3.0 ema150 +BTC",
+     "return_pct": -10.46,
+     "profit_factor": 0.71,
+     "trades": 79,
+     "max_drawdown_pct": 21.02
+    },
+    {
+     "name": "lb20 v4.0 sl2.0 trail3.0 ema200 +BTC",
+     "return_pct": -6.22,
+     "profit_factor": 0.81,
+     "trades": 71,
+     "max_drawdown_pct": 18.34
+    },
+    {
+     "name": "lb20 v4.0 sl2.0 trail3.0 ema250 +BTC",
+     "return_pct": -6.18,
+     "profit_factor": 0.81,
+     "trades": 70,
+     "max_drawdown_pct": 18.54
+    },
+    {
+     "name": "lb20 v4.0 sl2.0 trail3.0 ema100 +BTC",
+     "return_pct": -19.26,
+     "profit_factor": 0.53,
+     "trades": 88,
+     "max_drawdown_pct": 22.82
+    }
+   ]
+  }
+ }
+}

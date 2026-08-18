@@ -1,0 +1,676 @@
+{
+ "generated_at": 1787042064111,
+ "timeframe": "4h",
+ "days": 240,
+ "symbols": 32,
+ "fee": 0.001,
+ "periods": {
+  "train": [
+   1766318400000,
+   1775635200000
+  ],
+  "select": [
+   1775635200000,
+   1781856000000
+  ],
+  "holdout": [
+   1781856000000,
+   1787025600001
+  ]
+ },
+ "benchmark": {
+  "train": {
+   "return_pct": -20.16,
+   "symbols": 32,
+   "median_pct": -25.48
+  },
+  "select": {
+   "return_pct": 6.67,
+   "symbols": 32,
+   "median_pct": -14.61
+  }
+ },
+ "train_top": [
+  {
+   "name": "lb20 v2.5 sl2.0 trail3.0 ema50 +BTC",
+   "cfg": {
+    "lookback": 20,
+    "vol_mult": 2.5,
+    "atr_stop": 2.0,
+    "trend_ema": 50,
+    "regime": true,
+    "trail_atr": 3.0,
+    "max_bars": 0
+   },
+   "return_pct": 7.04,
+   "profit_factor": 1.25,
+   "trades": 64,
+   "max_drawdown_pct": 16.0
+  },
+  {
+   "name": "lb40 v6.0 sl2.0 tp4.0 +BTC",
+   "cfg": {
+    "lookback": 40,
+    "vol_mult": 6.0,
+    "atr_stop": 2.0,
+    "atr_tp": 4.0,
+    "regime": true
+   },
+   "return_pct": 4.69,
+   "profit_factor": 1.46,
+   "trades": 22,
+   "max_drawdown_pct": 5.1
+  },
+  {
+   "name": "lb20 v2.5 sl2.0 trail3.0 +BTC",
+   "cfg": {
+    "lookback": 20,
+    "vol_mult": 2.5,
+    "atr_stop": 2.0,
+    "trail_atr": 3.0,
+    "max_bars": 0,
+    "regime": true
+   },
+   "return_pct": 4.11,
+   "profit_factor": 1.13,
+   "trades": 70,
+   "max_drawdown_pct": 16.04
+  },
+  {
+   "name": "lb20 v2.5 sl2.0 tp3.0 ema50 +BTC",
+   "cfg": {
+    "lookback": 20,
+    "vol_mult": 2.5,
+    "atr_stop": 2.0,
+    "trend_ema": 50,
+    "regime": true
+   },
+   "return_pct": 3.85,
+   "profit_factor": 1.09,
+   "trades": 85,
+   "max_drawdown_pct": 10.37
+  },
+  {
+   "name": "lb20 v2.5 sl2.0 trail3.0 brk0.2% +BTC",
+   "cfg": {
+    "lookback": 20,
+    "vol_mult": 2.5,
+    "atr_stop": 2.0,
+    "trail_atr": 3.0,
+    "max_bars": 0,
+    "min_breakout": 0.002,
+    "regime": true
+   },
+   "return_pct": 3.61,
+   "profit_factor": 1.12,
+   "trades": 70,
+   "max_drawdown_pct": 16.04
+  },
+  {
+   "name": "lb20 v2.5 sl2.0 tp3.0 +BTC",
+   "cfg": {
+    "lookback": 20,
+    "vol_mult": 2.5,
+    "atr_stop": 2.0,
+    "atr_tp": 3.0,
+    "regime": true
+   },
+   "return_pct": 2.99,
+   "profit_factor": 1.06,
+   "trades": 89,
+   "max_drawdown_pct": 10.71
+  },
+  {
+   "name": "lb40 v6.0 sl2.0 trail2.0 +BTC",
+   "cfg": {
+    "lookback": 40,
+    "vol_mult": 6.0,
+    "atr_stop": 2.0,
+    "trail_atr": 2.0,
+    "max_bars": 0,
+    "regime": true
+   },
+   "return_pct": 2.98,
+   "profit_factor": 1.51,
+   "trades": 21,
+   "max_drawdown_pct": 3.46
+  },
+  {
+   "name": "lb40 v4.0 sl2.0 trail2.0 +BTC",
+   "cfg": {
+    "lookback": 40,
+    "vol_mult": 4.0,
+    "atr_stop": 2.0,
+    "trail_atr": 2.0,
+    "max_bars": 0,
+    "regime": true
+   },
+   "return_pct": 2.75,
+   "profit_factor": 1.24,
+   "trades": 37,
+   "max_drawdown_pct": 5.84
+  },
+  {
+   "name": "lb40 v6.0 sl2.0 trail3.0 +BTC",
+   "cfg": {
+    "lookback": 40,
+    "vol_mult": 6.0,
+    "atr_stop": 2.0,
+    "trail_atr": 3.0,
+    "max_bars": 0,
+    "regime": true
+   },
+   "return_pct": 2.3,
+   "profit_factor": 1.25,
+   "trades": 21,
+   "max_drawdown_pct": 9.14
+  },
+  {
+   "name": "lb40 v6.0 sl2.0 tp3.0 +BTC",
+   "cfg": {
+    "lookback": 40,
+    "vol_mult": 6.0,
+    "atr_stop": 2.0,
+    "atr_tp": 3.0,
+    "regime": true
+   },
+   "return_pct": 2.29,
+   "profit_factor": 1.23,
+   "trades": 22,
+   "max_drawdown_pct": 4.79
+  },
+  {
+   "name": "lb20 v4.0 sl2.0 trail3.0 ema50 +BTC",
+   "cfg": {
+    "lookback": 20,
+    "vol_mult": 4.0,
+    "atr_stop": 2.0,
+    "trend_ema": 50,
+    "regime": true,
+    "trail_atr": 3.0,
+    "max_bars": 0
+   },
+   "return_pct": 2.03,
+   "profit_factor": 1.09,
+   "trades": 44,
+   "max_drawdown_pct": 15.69
+  },
+  {
+   "name": "lb40 v4.0 sl2.0 trail3.0 +BTC",
+   "cfg": {
+    "lookback": 40,
+    "vol_mult": 4.0,
+    "atr_stop": 2.0,
+    "trail_atr": 3.0,
+    "max_bars": 0,
+    "regime": true
+   },
+   "return_pct": 1.33,
+   "profit_factor": 1.1,
+   "trades": 31,
+   "max_drawdown_pct": 14.01
+  },
+  {
+   "name": "lb20 v4.0 sl2.0 trail3.0 +BTC",
+   "cfg": {
+    "lookback": 20,
+    "vol_mult": 4.0,
+    "atr_stop": 2.0,
+    "trail_atr": 3.0,
+    "max_bars": 0,
+    "regime": true
+   },
+   "return_pct": 0.46,
+   "profit_factor": 1.02,
+   "trades": 46,
+   "max_drawdown_pct": 15.7
+  },
+  {
+   "name": "lb20 v4.0 sl2.0 trail3.0 atr>0.5% +BTC",
+   "cfg": {
+    "lookback": 20,
+    "vol_mult": 4.0,
+    "atr_stop": 2.0,
+    "trail_atr": 3.0,
+    "max_bars": 0,
+    "min_atr_pct": 0.005,
+    "max_atr_pct": 0.0,
+    "regime": true
+   },
+   "return_pct": 0.46,
+   "profit_factor": 1.02,
+   "trades": 46,
+   "max_drawdown_pct": 15.7
+  },
+  {
+   "name": "lb20 v4.0 sl2.0 trail3.0 atr>0.5% atr<6% +BTC",
+   "cfg": {
+    "lookback": 20,
+    "vol_mult": 4.0,
+    "atr_stop": 2.0,
+    "trail_atr": 3.0,
+    "max_bars": 0,
+    "min_atr_pct": 0.005,
+    "max_atr_pct": 0.06,
+    "regime": true
+   },
+   "return_pct": 0.46,
+   "profit_factor": 1.02,
+   "trades": 46,
+   "max_drawdown_pct": 15.7
+  },
+  {
+   "name": "lb20 v4.0 sl2.0 trail3.0 atr>1.0% +BTC",
+   "cfg": {
+    "lookback": 20,
+    "vol_mult": 4.0,
+    "atr_stop": 2.0,
+    "trail_atr": 3.0,
+    "max_bars": 0,
+    "min_atr_pct": 0.01,
+    "max_atr_pct": 0.0,
+    "regime": true
+   },
+   "return_pct": 0.46,
+   "profit_factor": 1.02,
+   "trades": 46,
+   "max_drawdown_pct": 15.7
+  },
+  {
+   "name": "lb20 v4.0 sl2.0 trail3.0 atr>1.0% atr<6% +BTC",
+   "cfg": {
+    "lookback": 20,
+    "vol_mult": 4.0,
+    "atr_stop": 2.0,
+    "trail_atr": 3.0,
+    "max_bars": 0,
+    "min_atr_pct": 0.01,
+    "max_atr_pct": 0.06,
+    "regime": true
+   },
+   "return_pct": 0.46,
+   "profit_factor": 1.02,
+   "trades": 46,
+   "max_drawdown_pct": 15.7
+  },
+  {
+   "name": "lb20 v4.0 sl2.0 trail3.0 brk0.2% +BTC",
+   "cfg": {
+    "lookback": 20,
+    "vol_mult": 4.0,
+    "atr_stop": 2.0,
+    "trail_atr": 3.0,
+    "max_bars": 0,
+    "min_breakout": 0.002,
+    "regime": true
+   },
+   "return_pct": 0.46,
+   "profit_factor": 1.02,
+   "trades": 46,
+   "max_drawdown_pct": 15.7
+  },
+  {
+   "name": "lb20 v2.5 sl2.0 trail2.0 +BTC",
+   "cfg": {
+    "lookback": 20,
+    "vol_mult": 2.5,
+    "atr_stop": 2.0,
+    "trail_atr": 2.0,
+    "max_bars": 0,
+    "regime": true
+   },
+   "return_pct": 0.22,
+   "profit_factor": 1.01,
+   "trades": 90,
+   "max_drawdown_pct": 11.71
+  },
+  {
+   "name": "meanrev os28 ema200 +BTC",
+   "cfg": {
+    "strategy": "meanrev",
+    "regime": true
+   },
+   "return_pct": -1.02,
+   "profit_factor": 0.0,
+   "trades": 1,
+   "max_drawdown_pct": 1.02
+  },
+  {
+   "name": "lb20 v6.0 sl2.0 tp4.0 +BTC",
+   "cfg": {
+    "lookback": 20,
+    "vol_mult": 6.0,
+    "atr_stop": 2.0,
+    "atr_tp": 4.0,
+    "regime": true
+   },
+   "return_pct": -1.51,
+   "profit_factor": 0.9,
+   "trades": 26,
+   "max_drawdown_pct": 7.71
+  },
+  {
+   "name": "lb20 v4.0 sl2.0 trail3.0 brk0.5% +BTC",
+   "cfg": {
+    "lookback": 20,
+    "vol_mult": 4.0,
+    "atr_stop": 2.0,
+    "trail_atr": 3.0,
+    "max_bars": 0,
+    "min_breakout": 0.005,
+    "regime": true
+   },
+   "return_pct": -1.82,
+   "profit_factor": 0.92,
+   "trades": 46,
+   "max_drawdown_pct": 15.82
+  },
+  {
+   "name": "lb40 v6.0 sl2.0 trail4.0 +BTC",
+   "cfg": {
+    "lookback": 40,
+    "vol_mult": 6.0,
+    "atr_stop": 2.0,
+    "trail_atr": 4.0,
+    "max_bars": 0,
+    "regime": true
+   },
+   "return_pct": -1.86,
+   "profit_factor": 0.82,
+   "trades": 20,
+   "max_drawdown_pct": 13.7
+  },
+  {
+   "name": "lb20 v4.0 sl3.0 trail3.0 +BTC",
+   "cfg": {
+    "lookback": 20,
+    "vol_mult": 4.0,
+    "atr_stop": 3.0,
+    "trail_atr": 3.0,
+    "max_bars": 0,
+    "regime": true
+   },
+   "return_pct": -1.86,
+   "profit_factor": 0.9,
+   "trades": 48,
+   "max_drawdown_pct": 14.05
+  },
+  {
+   "name": "lb40 v2.5 sl2.0 tp3.0 +BTC",
+   "cfg": {
+    "lookback": 40,
+    "vol_mult": 2.5,
+    "atr_stop": 2.0,
+    "atr_tp": 3.0,
+    "regime": true
+   },
+   "return_pct": -1.98,
+   "profit_factor": 0.94,
+   "trades": 64,
+   "max_drawdown_pct": 14.84
+  }
+ ],
+ "robust": [
+  {
+   "name": "lb20 v4.0 sl2.0 trail3.0 atr>0.5% atr<6% +BTC",
+   "cfg": {
+    "lookback": 20,
+    "vol_mult": 4.0,
+    "atr_stop": 2.0,
+    "trail_atr": 3.0,
+    "max_bars": 0,
+    "min_atr_pct": 0.005,
+    "max_atr_pct": 0.06,
+    "regime": true
+   },
+   "train": {
+    "return_pct": 0.46,
+    "profit_factor": 1.02,
+    "trades": 46,
+    "max_drawdown_pct": 15.7
+   },
+   "select": {
+    "return_pct": 23.22,
+    "profit_factor": 2.07,
+    "trades": 40,
+    "max_drawdown_pct": 8.2
+   }
+  },
+  {
+   "name": "lb20 v4.0 sl2.0 trail3.0 +BTC",
+   "cfg": {
+    "lookback": 20,
+    "vol_mult": 4.0,
+    "atr_stop": 2.0,
+    "trail_atr": 3.0,
+    "max_bars": 0,
+    "regime": true
+   },
+   "train": {
+    "return_pct": 0.46,
+    "profit_factor": 1.02,
+    "trades": 46,
+    "max_drawdown_pct": 15.7
+   },
+   "select": {
+    "return_pct": 21.97,
+    "profit_factor": 1.96,
+    "trades": 41,
+    "max_drawdown_pct": 8.2
+   }
+  },
+  {
+   "name": "lb20 v4.0 sl2.0 trail3.0 atr>0.5% +BTC",
+   "cfg": {
+    "lookback": 20,
+    "vol_mult": 4.0,
+    "atr_stop": 2.0,
+    "trail_atr": 3.0,
+    "max_bars": 0,
+    "min_atr_pct": 0.005,
+    "max_atr_pct": 0.0,
+    "regime": true
+   },
+   "train": {
+    "return_pct": 0.46,
+    "profit_factor": 1.02,
+    "trades": 46,
+    "max_drawdown_pct": 15.7
+   },
+   "select": {
+    "return_pct": 21.97,
+    "profit_factor": 1.96,
+    "trades": 41,
+    "max_drawdown_pct": 8.2
+   }
+  },
+  {
+   "name": "lb20 v4.0 sl2.0 trail3.0 atr>1.0% atr<6% +BTC",
+   "cfg": {
+    "lookback": 20,
+    "vol_mult": 4.0,
+    "atr_stop": 2.0,
+    "trail_atr": 3.0,
+    "max_bars": 0,
+    "min_atr_pct": 0.01,
+    "max_atr_pct": 0.06,
+    "regime": true
+   },
+   "train": {
+    "return_pct": 0.46,
+    "profit_factor": 1.02,
+    "trades": 46,
+    "max_drawdown_pct": 15.7
+   },
+   "select": {
+    "return_pct": 20.28,
+    "profit_factor": 1.85,
+    "trades": 41,
+    "max_drawdown_pct": 8.38
+   }
+  },
+  {
+   "name": "lb20 v4.0 sl2.0 trail3.0 atr>1.0% +BTC",
+   "cfg": {
+    "lookback": 20,
+    "vol_mult": 4.0,
+    "atr_stop": 2.0,
+    "trail_atr": 3.0,
+    "max_bars": 0,
+    "min_atr_pct": 0.01,
+    "max_atr_pct": 0.0,
+    "regime": true
+   },
+   "train": {
+    "return_pct": 0.46,
+    "profit_factor": 1.02,
+    "trades": 46,
+    "max_drawdown_pct": 15.7
+   },
+   "select": {
+    "return_pct": 19.07,
+    "profit_factor": 1.76,
+    "trades": 42,
+    "max_drawdown_pct": 8.38
+   }
+  },
+  {
+   "name": "lb20 v4.0 sl2.0 trail3.0 ema50 +BTC",
+   "cfg": {
+    "lookback": 20,
+    "vol_mult": 4.0,
+    "atr_stop": 2.0,
+    "trend_ema": 50,
+    "regime": true,
+    "trail_atr": 3.0,
+    "max_bars": 0
+   },
+   "train": {
+    "return_pct": 2.03,
+    "profit_factor": 1.09,
+    "trades": 44,
+    "max_drawdown_pct": 15.69
+   },
+   "select": {
+    "return_pct": 18.01,
+    "profit_factor": 1.91,
+    "trades": 34,
+    "max_drawdown_pct": 8.6
+   }
+  },
+  {
+   "name": "lb20 v4.0 sl2.0 trail3.0 brk0.2% +BTC",
+   "cfg": {
+    "lookback": 20,
+    "vol_mult": 4.0,
+    "atr_stop": 2.0,
+    "trail_atr": 3.0,
+    "max_bars": 0,
+    "min_breakout": 0.002,
+    "regime": true
+   },
+   "train": {
+    "return_pct": 0.46,
+    "profit_factor": 1.02,
+    "trades": 46,
+    "max_drawdown_pct": 15.7
+   },
+   "select": {
+    "return_pct": 17.34,
+    "profit_factor": 1.72,
+    "trades": 41,
+    "max_drawdown_pct": 8.2
+   }
+  },
+  {
+   "name": "lb20 v2.5 sl2.0 trail2.0 +BTC",
+   "cfg": {
+    "lookback": 20,
+    "vol_mult": 2.5,
+    "atr_stop": 2.0,
+    "trail_atr": 2.0,
+    "max_bars": 0,
+    "regime": true
+   },
+   "train": {
+    "return_pct": 0.22,
+    "profit_factor": 1.01,
+    "trades": 90,
+    "max_drawdown_pct": 11.71
+   },
+   "select": {
+    "return_pct": 12.05,
+    "profit_factor": 1.46,
+    "trades": 70,
+    "max_drawdown_pct": 9.58
+   }
+  },
+  {
+   "name": "lb20 v2.5 sl2.0 tp3.0 ema50 +BTC",
+   "cfg": {
+    "lookback": 20,
+    "vol_mult": 2.5,
+    "atr_stop": 2.0,
+    "trend_ema": 50,
+    "regime": true
+   },
+   "train": {
+    "return_pct": 3.85,
+    "profit_factor": 1.09,
+    "trades": 85,
+    "max_drawdown_pct": 10.37
+   },
+   "select": {
+    "return_pct": 8.57,
+    "profit_factor": 1.28,
+    "trades": 68,
+    "max_drawdown_pct": 10.11
+   }
+  },
+  {
+   "name": "lb20 v2.5 sl2.0 tp3.0 +BTC",
+   "cfg": {
+    "lookback": 20,
+    "vol_mult": 2.5,
+    "atr_stop": 2.0,
+    "atr_tp": 3.0,
+    "regime": true
+   },
+   "train": {
+    "return_pct": 2.99,
+    "profit_factor": 1.06,
+    "trades": 89,
+    "max_drawdown_pct": 10.71
+   },
+   "select": {
+    "return_pct": 7.07,
+    "profit_factor": 1.2,
+    "trades": 76,
+    "max_drawdown_pct": 10.1
+   }
+  },
+  {
+   "name": "lb40 v4.0 sl2.0 trail3.0 +BTC",
+   "cfg": {
+    "lookback": 40,
+    "vol_mult": 4.0,
+    "atr_stop": 2.0,
+    "trail_atr": 3.0,
+    "max_bars": 0,
+    "regime": true
+   },
+   "train": {
+    "return_pct": 1.33,
+    "profit_factor": 1.1,
+    "trades": 31,
+    "max_drawdown_pct": 14.01
+   },
+   "select": {
+    "return_pct": 6.78,
+    "profit_factor": 1.33,
+    "trades": 33,
+    "max_drawdown_pct": 9.25
+   }
+  }
+ ]
+}

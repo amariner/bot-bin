@@ -1,0 +1,23 @@
+:root {
+  --bg: #0d1117;
+  --card: #161b27;
+  --border: #232a3a;
+  --text: #e6e9f0;
+  --dim: #8b93a7;
+  --green: #2ebd85;
+  --red: #f6465d;
+  --accent: #4f8ef7;
+  font-family: 'SF Pro Text', -apple-system, 'Segoe UI', Roboto, sans-serif;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 14px;
+}
+
+#root { min-height: 100vh; }

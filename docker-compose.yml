@@ -1,0 +1,14 @@
+services:
+  bot:
+    build: .
+    container_name: bot-bin
+    restart: unless-stopped        # se relanza solo tras caídas o reinicios
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./botdata:/data            # operaciones y equity sobreviven al contenedor
+    environment:
+      BOT_AUTOSTART: "1"           # el bot arranca solo al levantar el servicio
+      # BOT_INITIAL_CAPITAL: "10000"
+      # BOT_DEFAULT_STRATEGY: "momentum_4h"
+      # BOT_TIMEFRAME: "4h"

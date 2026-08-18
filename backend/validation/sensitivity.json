@@ -1,0 +1,201 @@
+{
+ "generated_at": 1787042157859,
+ "base": {
+  "lookback": 20,
+  "vol_mult": 4.0,
+  "atr_stop": 2.0,
+  "trail_atr": 3.0,
+  "trend_ema": 0,
+  "max_bars": 0,
+  "regime": true
+ },
+ "benchmark": -31.34,
+ "timeframe": "4h",
+ "axes": {
+  "vol_mult": {
+   "rows": [
+    {
+     "value": 2.5,
+     "return_pct": 2.59,
+     "profit_factor": 1.02,
+     "trades": 206,
+     "max_drawdown_pct": 30.44
+    },
+    {
+     "value": 3.0,
+     "return_pct": -2.6,
+     "profit_factor": 0.97,
+     "trades": 187,
+     "max_drawdown_pct": 28.4
+    },
+    {
+     "value": 4.0,
+     "return_pct": 5.0,
+     "profit_factor": 1.06,
+     "trades": 151,
+     "max_drawdown_pct": 25.09
+    },
+    {
+     "value": 5.0,
+     "return_pct": 1.89,
+     "profit_factor": 1.03,
+     "trades": 127,
+     "max_drawdown_pct": 18.88
+    },
+    {
+     "value": 6.0,
+     "return_pct": 2.11,
+     "profit_factor": 1.03,
+     "trades": 101,
+     "max_drawdown_pct": 16.42
+    }
+   ],
+   "positive": 4,
+   "total": 5
+  },
+  "trail_atr": {
+   "rows": [
+    {
+     "value": 2.0,
+     "return_pct": 7.69,
+     "profit_factor": 1.09,
+     "trades": 180,
+     "max_drawdown_pct": 14.45
+    },
+    {
+     "value": 2.5,
+     "return_pct": 7.24,
+     "profit_factor": 1.08,
+     "trades": 162,
+     "max_drawdown_pct": 19.62
+    },
+    {
+     "value": 3.0,
+     "return_pct": 5.0,
+     "profit_factor": 1.06,
+     "trades": 151,
+     "max_drawdown_pct": 25.09
+    },
+    {
+     "value": 3.5,
+     "return_pct": -9.83,
+     "profit_factor": 0.9,
+     "trades": 150,
+     "max_drawdown_pct": 25.42
+    },
+    {
+     "value": 4.0,
+     "return_pct": -10.9,
+     "profit_factor": 0.89,
+     "trades": 143,
+     "max_drawdown_pct": 27.94
+    }
+   ],
+   "positive": 3,
+   "total": 5
+  },
+  "atr_stop": {
+   "rows": [
+    {
+     "value": 1.5,
+     "return_pct": -2.31,
+     "profit_factor": 0.98,
+     "trades": 157,
+     "max_drawdown_pct": 24.25
+    },
+    {
+     "value": 2.0,
+     "return_pct": 5.0,
+     "profit_factor": 1.06,
+     "trades": 151,
+     "max_drawdown_pct": 25.09
+    },
+    {
+     "value": 2.5,
+     "return_pct": 7.06,
+     "profit_factor": 1.09,
+     "trades": 145,
+     "max_drawdown_pct": 21.81
+    },
+    {
+     "value": 3.0,
+     "return_pct": 1.62,
+     "profit_factor": 1.02,
+     "trades": 148,
+     "max_drawdown_pct": 19.57
+    }
+   ],
+   "positive": 3,
+   "total": 4
+  },
+  "trend_ema": {
+   "rows": [
+    {
+     "value": 0,
+     "return_pct": 5.0,
+     "profit_factor": 1.06,
+     "trades": 151,
+     "max_drawdown_pct": 25.09
+    },
+    {
+     "value": 50,
+     "return_pct": 7.94,
+     "profit_factor": 1.09,
+     "trades": 147,
+     "max_drawdown_pct": 25.11
+    },
+    {
+     "value": 100,
+     "return_pct": -6.06,
+     "profit_factor": 0.91,
+     "trades": 130,
+     "max_drawdown_pct": 22.19
+    },
+    {
+     "value": 200,
+     "return_pct": 10.59,
+     "profit_factor": 1.2,
+     "trades": 98,
+     "max_drawdown_pct": 16.93
+    }
+   ],
+   "positive": 3,
+   "total": 4
+  },
+  "lookback": {
+   "rows": [
+    {
+     "value": 10,
+     "return_pct": 7.99,
+     "profit_factor": 1.09,
+     "trades": 177,
+     "max_drawdown_pct": 20.23
+    },
+    {
+     "value": 20,
+     "return_pct": 5.0,
+     "profit_factor": 1.06,
+     "trades": 151,
+     "max_drawdown_pct": 25.09
+    },
+    {
+     "value": 30,
+     "return_pct": -16.63,
+     "profit_factor": 0.79,
+     "trades": 148,
+     "max_drawdown_pct": 28.48
+    },
+    {
+     "value": 40,
+     "return_pct": -3.17,
+     "profit_factor": 0.96,
+     "trades": 132,
+     "max_drawdown_pct": 22.28
+    }
+   ],
+   "positive": 2,
+   "total": 4
+  }
+ },
+ "plateau_pct": 68.2
+}
