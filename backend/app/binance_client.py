@@ -59,6 +59,10 @@ class BinancePublic:
     async def exchange_info(self) -> dict:
         return await self._get("/api/v3/exchangeInfo")
 
+    async def price(self, symbol: str) -> float:
+        data = await self._get("/api/v3/ticker/price", {"symbol": symbol})
+        return float(data["price"])
+
     async def klines(self, symbol: str, interval: str, limit: int = 500,
                      start_ms: Optional[int] = None, end_ms: Optional[int] = None) -> List[Candle]:
         params = {"symbol": symbol, "interval": interval, "limit": limit}

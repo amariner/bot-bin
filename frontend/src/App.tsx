@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useState } from 'react'
 import { BacktestPanel } from './BacktestPanel'
+import { Coin } from './CoinIcon'
 import { EquityChart } from './EquityChart'
+import { Narrator } from './Narrator'
 import { ValidationPanel } from './ValidationPanel'
 import { useBotSocket } from './useBotSocket'
 import type { BotState, EventDto, MoverDto, NearSignalDto, PositionDto, TradeDto } from './types'
@@ -10,6 +12,13 @@ const fmt = (n: number | undefined | null, d = 2) =>
   n === undefined || n === null ? '–' : n.toLocaleString('es-ES', { minimumFractionDigits: d, maximumFractionDigits: d })
 
 const fmtPrice = (n: number) => (n >= 100 ? fmt(n, 2) : n >= 1 ? fmt(n, 4) : fmt(n, 6))
+
+/** Se opera en USDT (Tether), la moneda con liquidez real en Binance. */
+const usdt = (n: number | undefined | null, d = 2) => `${fmt(n, d)} USDT`
+
+/** Equivalente aproximado en euros, solo informativo. */
+const enEuros = (n: number | undefined | null, rate: number | null | undefined) =>
+  n == null || !rate ? null : `≈ ${fmt(n / rate, 2)} €`
 
 const fmtTime = (ts: number) =>
   new Date(ts).toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' })
@@ -99,31 +108,40 @@ function Positions({ rows }: { rows: PositionDto[] }) {
       </p>
     )
   return (
-    <table>
-      <thead>
-        <tr>
-          <th>Símbolo</th><th>Entrada</th><th>Último</th><th>Máximo</th>
-          <th>Stop actual</th><th>Colchón</th><th>PnL</th><th>Abierta</th><th>Motivo</th>
-        </tr>
-      </thead>
-      <tbody>
-        {rows.map((p) => (
-          <tr key={p.symbol}>
-            <td className="sym">{p.symbol.replace('USDT', '')}</td>
-            <td>{fmtPrice(p.entry_price)}</td>
-            <td>{p.last_price ? fmtPrice(p.last_price) : '–'}</td>
-            <td className="dim">{p.peak ? fmtPrice(p.peak) : '–'}</td>
-            <td className="dim">{fmtPrice(p.stop_price)}</td>
-            <td className="dim">{p.stop_distance_pct != null ? `${fmt(p.stop_distance_pct, 1)}%` : '–'}</td>
-            <td className={pnlClass(p.unrealized_pnl ?? 0)}>
-              {fmt(p.unrealized_pnl)} $ ({fmt(p.unrealized_pct)}%)
-            </td>
-            <td className="dim">{fmtTime(p.opened_ts)}</td>
-            <td className="dim">{p.reason}</td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
+    <>
+      <div className="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Moneda</th><th>Compró a</th><th>Ahora</th><th>Máximo</th>
+              <th>Vende si baja a</th><th>Margen</th><th>Ganancia</th><th>Desde</th>
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map((p) => (
+              <tr key={p.symbol}>
+                <td><Coin symbol={p.symbol} /></td>
+                <td>{fmtPrice(p.entry_price)}</td>
+                <td>{p.last_price ? fmtPrice(p.last_price) : '–'}</td>
+                <td className="dim">{p.peak ? fmtPrice(p.peak) : '–'}</td>
+                <td className="dim">{fmtPrice(p.stop_price)}</td>
+                <td className="dim">
+                  {p.stop_distance_pct != null ? `${fmt(p.stop_distance_pct, 1)}%` : '–'}
+                </td>
+                <td className={pnlClass(p.unrealized_pnl ?? 0)}>
+                  {fmt(p.unrealized_pnl)} USDT ({fmt(p.unrealized_pct)}%)
+                </td>
+                <td className="dim">{fmtTime(p.opened_ts)}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <p className="note">
+        <b>Vende si baja a</b> es el precio de venta automática, que sube solo conforme
+        sube la moneda. <b>Margen</b> es cuánto puede caer antes de que la venda.
+      </p>
+    </>
   )
 }
 
@@ -171,30 +189,39 @@ function NearSignals({ rows, timeframe }: { rows: NearSignalDto[]; timeframe: st
     )
   return (
     <>
-      <table>
-        <thead>
-          <tr><th>Símbolo</th><th>Le falta</th><th>Nivel de rotura</th><th>Volumen última vela</th></tr>
-        </thead>
-        <tbody>
-          {rows.map((r) => (
-            <tr key={r.symbol}>
-              <td className="sym">
-                {r.symbol.replace('USDT', '')}{r.in_position ? ' 📌' : ''}
-              </td>
-              <td className={r.dist_to_breakout_pct <= 0 ? 'pos' : ''}>
-                {r.dist_to_breakout_pct <= 0 ? 'rompiendo' : `${fmt(r.dist_to_breakout_pct, 1)}%`}
-              </td>
-              <td className="dim">{fmtPrice(r.breakout_level)}</td>
-              <td className={r.vol_ratio >= r.vol_needed ? 'pos' : 'dim'}>
-                {fmt(r.vol_ratio, 1)}× de {fmt(r.vol_needed, 0)}× requerido
-              </td>
+      <div className="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Moneda</th><th>Le falta subir</th><th>Precio a superar</th>
+              <th>Volumen (necesita 4×)</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {rows.map((r) => (
+              <tr key={r.symbol}>
+                <td>
+                  <Coin symbol={r.symbol} />{r.in_position ? ' 📌' : ''}
+                </td>
+                <td className={r.dist_to_breakout_pct <= 0 ? 'pos' : ''}>
+                  {r.dist_to_breakout_pct <= 0
+                    ? 'ya lo supera'
+                    : `${fmt(r.dist_to_breakout_pct, 1)}%`}
+                </td>
+                <td className="dim">{fmtPrice(r.breakout_level)}</td>
+                <td className={r.vol_ratio >= r.vol_needed ? 'pos' : 'dim'}>
+                  {fmt(r.vol_ratio, 1)}× {r.vol_ratio >= r.vol_needed ? '✓' : ''}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
       <p className="note">
-        Para comprar hacen falta las dos cosas a la vez al cierre de la vela de {timeframe}:
-        superar el nivel de rotura y volumen ≥ el requerido (con BTC en verde). 📌 = ya en cartera.
+        Estas son las monedas que el bot tiene más cerca de comprar. Necesita las
+        <b> dos cosas a la vez</b> en la revisión de cada {timeframe === '4h' ? '4 horas' : timeframe}:
+        que supere ese precio <b>y</b> que se negocie 4 veces más de lo habitual.
+        Casi siempre falla el volumen, por eso compra poco. 📌 = ya la tiene comprada.
       </p>
     </>
   )
@@ -210,26 +237,34 @@ function Trades({ sessionCount }: { sessionCount: number }) {
   const total = rows.reduce((s, t) => s + t.pnl, 0)
   return (
     <>
-      <table>
-        <thead>
-          <tr><th>Cuándo</th><th>Símbolo</th><th>Entrada</th><th>Salida</th><th>PnL</th><th>Salida por</th></tr>
-        </thead>
-        <tbody>
-          {rows.map((t, i) => (
-            <tr key={`${t.symbol}-${t.exit_ts}-${i}`}>
-              <td className="dim">
-                {new Date(t.exit_ts).toLocaleString('es-ES', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' })}
-              </td>
-              <td className="sym">{t.symbol.replace('USDT', '')}</td>
-              <td>{fmtPrice(t.entry_price)}</td>
-              <td>{fmtPrice(t.exit_price)}</td>
-              <td className={pnlClass(t.pnl)}>{fmt(t.pnl)} $</td>
-              <td className="dim">{t.exit_reason}</td>
+      <div className="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Cuándo</th><th>Moneda</th><th>Compró a</th><th>Vendió a</th>
+              <th>Resultado</th><th>Por qué vendió</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
-      <p className="note">{rows.length} operaciones · PnL acumulado <b className={pnlClass(total)}>{fmt(total)} $</b></p>
+          </thead>
+          <tbody>
+            {rows.map((t, i) => (
+              <tr key={`${t.symbol}-${t.exit_ts}-${i}`}>
+                <td className="dim">
+                  {new Date(t.exit_ts).toLocaleString('es-ES', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' })}
+                </td>
+                <td><Coin symbol={t.symbol} /></td>
+                <td>{fmtPrice(t.entry_price)}</td>
+                <td>{fmtPrice(t.exit_price)}</td>
+                <td className={pnlClass(t.pnl)}>{fmt(t.pnl)} USDT</td>
+                <td className="dim">{t.exit_reason}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <p className="note">
+        {rows.length} operaciones · resultado acumulado{' '}
+        <b className={pnlClass(total)}>{fmt(total)} USDT</b>
+      </p>
     </>
   )
 }
@@ -241,7 +276,7 @@ function Movers({ title, rows }: { title: string; rows: MoverDto[] }) {
       <div className="movers-grid">
         {rows.map((m) => (
           <div key={m.symbol} className="mover">
-            <span className="sym">{m.base}</span>
+            <Coin symbol={m.symbol} size={18} />
             <span className="price">{fmtPrice(m.last_price)}</span>
             <span className={`chg ${pnlClass(m.change_pct)}`}>
               {m.change_pct > 0 ? '+' : ''}{fmt(m.change_pct, 1)}%
@@ -258,22 +293,16 @@ function Diagnostics({ state }: { state: BotState | null }) {
   if (!state || state.status !== 'running') return null
   return (
     <div className="diag">
-      <span>velas <b>{state.timeframe}</b></span>
-      <span>próximo cierre en <b><Countdown target={state.next_close_ts} /></b></span>
-      <span>velas procesadas <b>{state.candles_processed}</b></span>
-      <span>señales detectadas <b>{state.signals_seen}</b></span>
-      <span>descartadas <b>{state.signals_rejected}</b></span>
-      <span>
-        último cierre analizado <b>{state.last_candle_ts ? fmtTime(state.last_candle_ts) : '–'}</b>
+      <span>Próxima revisión en <b><Countdown target={state.next_close_ts} /></b></span>
+      <span>Bitcoin{' '}
+        <b className={state.regime_risk_on ? 'pos' : 'neg'}>
+          {state.regime_risk_on ? 'fuerte · puede comprar' : 'débil · no compra'}
+        </b>
       </span>
-      {state.regime_filter && (
-        <span>
-          régimen BTC{' '}
-          <b className={state.regime_risk_on ? 'pos' : 'neg'}>
-            {state.regime_risk_on ? 'risk-on (opera)' : 'risk-off (no abre)'}
-          </b>
-        </span>
-      )}
+      <span>Oportunidades vistas <b>{state.signals_seen}</b></span>
+      <span>Descartadas <b>{state.signals_rejected}</b></span>
+      <span>Revisiones hechas <b>{state.candles_processed}</b></span>
+      {state.eur_rate && <span>1 € = <b>{fmt(state.eur_rate, 3)} USDT</b></span>}
     </div>
   )
 }
@@ -311,16 +340,23 @@ export default function App() {
 
       {state?.error && <div className="banner-error">{state.error}</div>}
 
+      <Narrator state={state} connected={connected} />
+
       <section className="stats">
-        <Stat label="Equity" value={`${fmt(state?.equity)} $`}
-              sub={`capital inicial ${fmt(state?.initial_capital, 0)} $`} />
-        <Stat label="Retorno total" value={`${fmt(state?.total_return_pct, 3)}%`}
-              cls={pnlClass(state?.total_return_pct ?? 0)} />
-        <Stat label="PnL de hoy" value={`${fmt(state?.daily_pnl_pct, 3)}%`}
-              cls={pnlClass(state?.daily_pnl_pct ?? 0)} sub="límite diario −2%" />
-        <Stat label="Cash libre" value={`${fmt(state?.cash)} $`} />
-        <Stat label="Posiciones" value={`${state?.open_positions.length ?? 0} / 5`}
-              sub={`estrategia: ${state?.strategy ?? '–'}`} />
+        <Stat label="Dinero total" value={usdt(state?.equity)}
+              sub={enEuros(state?.equity, state?.eur_rate)
+                   ?? `empezó con ${fmt(state?.initial_capital, 0)}`} />
+        <Stat label="Ganancia desde el inicio" value={`${fmt(state?.total_return_pct, 2)}%`}
+              cls={pnlClass(state?.total_return_pct ?? 0)}
+              sub={usdt((state?.equity ?? 0) - (state?.initial_capital ?? 0))} />
+        <Stat label="Hoy" value={`${fmt(state?.daily_pnl_pct, 2)}%`}
+              cls={pnlClass(state?.daily_pnl_pct ?? 0)}
+              sub="si pierde 2% para de comprar" />
+        <Stat label="Sin invertir" value={usdt(state?.cash)}
+              sub="dinero libre para comprar" />
+        <Stat label="Monedas compradas"
+              value={`${state?.open_positions.length ?? 0} de ${state?.max_positions ?? 5}`}
+              sub="máximo a la vez" />
       </section>
 
       <Diagnostics state={state} />
@@ -359,25 +395,25 @@ export default function App() {
             )}
           </div>
           <div className="card">
-            <h2>Actividad del bot</h2>
+            <h2>Qué ha ido haciendo</h2>
             <ActivityFeed live={state?.recent_events ?? []} />
           </div>
           <div className="card">
-            <h2>Posiciones abiertas ({state?.open_positions.length ?? 0}/{state?.max_positions ?? 5})</h2>
+            <h2>Monedas que tiene ahora ({state?.open_positions.length ?? 0} de {state?.max_positions ?? 5})</h2>
             <Positions rows={state?.open_positions ?? []} />
           </div>
           <div className="card">
-            <h2>En el radar · cerca de dar señal</h2>
+            <h2>A punto de comprar</h2>
             <NearSignals rows={state?.near_signals ?? []} timeframe={state?.timeframe ?? '4h'} />
           </div>
           <div className="card">
-            <h2>Historial de operaciones</h2>
+            <h2>Todas las operaciones</h2>
             <Trades sessionCount={state?.session_trades.length ?? 0} />
           </div>
           <div className="card">
-            <h2>Mercado ahora</h2>
-            <Movers title="Mayores subidas 24h" rows={state?.top_movers ?? []} />
-            <Movers title="Mayores caídas 24h" rows={state?.bottom_movers ?? []} />
+            <h2>Cómo va el mercado</h2>
+            <Movers title="Las que más suben hoy" rows={state?.top_movers ?? []} />
+            <Movers title="Las que más bajan hoy" rows={state?.bottom_movers ?? []} />
           </div>
         </section>
       ) : (

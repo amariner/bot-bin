@@ -84,4 +84,5 @@ export interface BotState {
   recent_events: EventDto[]
   near_signals: NearSignalDto[]
   max_positions: number
+  eur_rate: number | null
 }

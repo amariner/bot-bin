@@ -119,6 +119,33 @@ tr:last-child td { border-bottom: none; }
   font-size: 12px; color: var(--accent); overflow-x: auto;
 }
 
+/* ---------- iconos de monedas ---------- */
+.coin { display: inline-flex; align-items: center; gap: 7px; white-space: nowrap; }
+.coin-icon { border-radius: 50%; display: inline-block; vertical-align: middle; }
+.coin-fallback {
+  display: inline-flex; align-items: center; justify-content: center;
+  color: #fff; font-weight: 800; letter-spacing: -0.3px; line-height: 1;
+}
+
+/* ---------- narrador en lenguaje llano ---------- */
+.narrator {
+  background: linear-gradient(180deg, rgba(79,142,247,0.10), rgba(79,142,247,0.03));
+  border: 1px solid rgba(79,142,247,0.35);
+  border-radius: 12px; padding: 14px 16px; margin-bottom: 14px;
+  font-size: 13.5px; line-height: 1.6;
+}
+.narrator.warn { background: rgba(232,185,61,0.08); border-color: #e8b93d; }
+.narrator.bad { background: rgba(246,70,93,0.08); border-color: var(--red); }
+.narrator-main { margin-bottom: 8px; }
+.narrator-list { margin: 0; padding-left: 18px; color: var(--dim); }
+.narrator-list li { margin: 5px 0; }
+.narrator-list b { color: var(--text); }
+.narrator-list b.pos { color: var(--green); }
+.narrator-list b.neg { color: var(--red); }
+
+/* Las tablas anchas hacen scroll dentro de su tarjeta, nunca la página entera */
+.table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+
 .feed { display: flex; flex-direction: column; gap: 6px; max-height: 320px; overflow-y: auto; }
 .feed-row { display: flex; gap: 10px; font-size: 12.5px; line-height: 1.45; }
 .feed-time { flex: 0 0 92px; font-variant-numeric: tabular-nums; }
@@ -132,3 +159,52 @@ tr:last-child td { border-bottom: none; }
 }
 .mover .price { color: var(--dim); font-size: 11px; font-variant-numeric: tabular-nums; }
 .mover .chg { font-weight: 700; }
+
+/* ============================ MÓVIL ============================ */
+@media (max-width: 640px) {
+  .app { padding: 12px 12px 32px; }
+
+  header { gap: 8px; padding-bottom: 10px; margin-bottom: 12px; }
+  .brand h1 { font-size: 17px; }
+  .brand .dim { font-size: 11px; }
+  .spacer { display: none; }
+  header .pill { font-size: 11px; padding: 3px 10px; }
+  .controls { width: 100%; }
+  .controls select { flex: 1; min-width: 0; }
+
+  /* Dos columnas en vez de tarjetas gigantes apiladas */
+  .stats { grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; }
+  .stat { padding: 9px 11px; border-radius: 10px; }
+  .stat-label { font-size: 9.5px; letter-spacing: 0.4px; }
+  .stat-value { font-size: 16px; margin-top: 2px; }
+  .stat-sub { font-size: 10px; }
+  /* La cifra principal ocupa todo el ancho */
+  .stats > .stat:first-child { grid-column: 1 / -1; }
+  .stats > .stat:first-child .stat-value { font-size: 22px; }
+
+  .narrator { padding: 12px 13px; font-size: 13px; border-radius: 10px; }
+  .narrator-list { padding-left: 16px; }
+
+  .diag { gap: 6px 14px; padding: 8px 11px; font-size: 11.5px; }
+
+  /* Pestañas con scroll horizontal en vez de partir las palabras */
+  .tabs { overflow-x: auto; padding-bottom: 2px; }
+  .tab { white-space: nowrap; padding: 7px 13px; font-size: 12.5px; }
+
+  .card { padding: 12px 13px; border-radius: 10px; }
+  .card h2 { font-size: 13px; }
+  .equity-chart, .chart-card { min-height: 0; }
+
+  table { font-size: 12px; }
+  th { font-size: 9.5px; padding: 5px 6px; }
+  td { padding: 7px 6px; font-size: 12px; }
+
+  .feed-row { flex-direction: column; gap: 1px; }
+  .feed-time { flex: none; font-size: 10.5px; }
+
+  .movers-grid { grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); gap: 6px; }
+  .mover { padding: 7px 8px; font-size: 11px; }
+
+  .periods { grid-template-columns: 1fr; }
+  .note { font-size: 11.5px; }
+}

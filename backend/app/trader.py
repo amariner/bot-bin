@@ -41,6 +41,9 @@ class LiveTrader:
         self.error: Optional[str] = None
         self.started_at: Optional[int] = None
         self.recent_events: Deque[dict] = deque(maxlen=80)
+        # Cotización EUR/USDT para poder mostrar el equivalente en euros.
+        # Se opera en USDT (es donde está la liquidez), pero el usuario piensa en €.
+        self.eur_rate: Optional[float] = None
         self._tasks: List[asyncio.Task] = []
         self._subscribers: Set[asyncio.Queue] = set()
         self._last_broadcast = 0.0
@@ -68,6 +71,9 @@ class LiveTrader:
         # BTC hace falta para el filtro de régimen aunque no sea operable
         if self.regime is not None and "BTCUSDT" not in symbols:
             symbols.append("BTCUSDT")
+        # EURUSDT solo para convertir a euros en la interfaz, nunca se opera
+        if "EURUSDT" not in symbols:
+            symbols.append("EURUSDT")
         self.stream = MarketStream(symbols, on_kline_closed=self._on_kline,
                                    on_price=self._on_price)
         self._tasks = [
@@ -96,6 +102,11 @@ class LiveTrader:
 
         # El filtro de régimen necesita histórico de BTC aunque BTC no esté
         # en el universo operable
+        try:
+            self.eur_rate = await self.client.price("EURUSDT")
+        except Exception:
+            self.eur_rate = None       # sin cambio a euros la UI sigue funcionando
+
         if self.regime is not None:
             btc = list(self.candles.get("BTCUSDT") or
                        await self.client.klines("BTCUSDT", settings.timeframe,
@@ -138,6 +149,9 @@ class LiveTrader:
             await self.broadcast(force=True)
 
     async def _on_price(self, symbol: str, price: float):
+        if symbol == "EURUSDT":
+            self.eur_rate = price      # solo referencia de cambio, no se opera
+            return
         if symbol in self.ticker:
             self.ticker[symbol]["last_price"] = price
         ev = self.engine.check_tick_exit(symbol, price, int(time.time() * 1000))
@@ -260,6 +274,7 @@ class LiveTrader:
             "universe_size": len(self.universe),
             "top_movers": movers[:12],
             "bottom_movers": movers[-6:][::-1] if len(movers) > 6 else [],
+            "eur_rate": self.eur_rate,
             "recent_events": list(self.recent_events)[:40],
             "near_signals": self.near_signals() if self.status == "running" else [],
             "max_positions": self.engine.risk.max_positions,
