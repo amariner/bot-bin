@@ -3,7 +3,7 @@
 La misma lógica de entradas, stops, take-profits y riesgo procesa velas cerradas
 en ambos modos: lo que se backtestea es exactamente lo que corre en vivo.
 """
-from dataclasses import asdict
+from dataclasses import asdict, fields
 from typing import Dict, List, Optional
 
 from ..config import settings
@@ -194,8 +194,12 @@ class TradingEngine:
         self.cash = float(st["cash"])
         self.initial_capital = float(st.get("initial_capital", self.initial_capital))
         self.positions = {}
+        # Solo se aceptan los campos que Position tiene HOY. Así, si en una
+        # actualización futura se añade o se quita un campo, el estado antiguo
+        # se sigue leyendo en vez de reventar el arranque.
+        valid = {f.name for f in fields(Position)}
         for d in st.get("positions", []):
-            data = dict(d)
+            data = {k: v for k, v in d.items() if k in valid}
             data.setdefault("meta", {})
             pos = Position(**data)
             self.positions[pos.symbol] = pos

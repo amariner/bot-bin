@@ -297,10 +297,40 @@ class LiveTrader:
         rows.sort(key=lambda r: r["dist_to_breakout_pct"])
         return rows[:max_rows]
 
+    def weekly_movers(self, days: int = 7) -> List[dict]:
+        """Variación de los últimos `days` días por moneda.
+
+        No hace falta pedir nada a Binance: el bot ya guarda en memoria 300
+        velas por símbolo, así que basta con comparar el precio actual con el
+        cierre de hace una semana.
+        """
+        tf_ms = TIMEFRAME_MS.get(settings.timeframe, 300_000)
+        needed = int(days * 86_400_000 / tf_ms)
+        rows = []
+        for sym, dq in self.candles.items():
+            if sym == "EURUSDT" or len(dq) < needed + 1:
+                continue
+            candles = list(dq)
+            past = candles[-(needed + 1)].close
+            info = self.ticker.get(sym, {})
+            last = info.get("last_price") or candles[-1].close
+            if past <= 0:
+                continue
+            rows.append({
+                "symbol": sym,
+                "base": sym[:-4] if sym.endswith("USDT") else sym,
+                "last_price": last,
+                "change_pct": round((last / past - 1) * 100, 2),
+                "quote_volume": info.get("quote_volume", 0.0),
+            })
+        rows.sort(key=lambda r: r["change_pct"], reverse=True)
+        return rows
+
     def state_snapshot(self) -> dict:
         eng = self.engine
         equity = eng.equity()
         movers = sorted(self.ticker.values(), key=lambda r: r["change_pct"], reverse=True)
+        weekly = self.weekly_movers() if self.status == "running" else []
         tf_ms = TIMEFRAME_MS.get(settings.timeframe, 300_000)
         now_ms = int(time.time() * 1000)
         return {
@@ -332,6 +362,8 @@ class LiveTrader:
             "universe_size": len(self.universe),
             "top_movers": movers[:12],
             "bottom_movers": movers[-6:][::-1] if len(movers) > 6 else [],
+            "weekly_top": weekly[:12],
+            "weekly_bottom": weekly[-6:][::-1] if len(weekly) > 6 else [],
             "eur_rate": self.eur_rate,
             "recent_events": list(self.recent_events)[:40],
             "near_signals": self.near_signals() if self.status == "running" else [],

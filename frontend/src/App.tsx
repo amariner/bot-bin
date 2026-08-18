@@ -2,10 +2,11 @@ import { useCallback, useEffect, useState } from 'react'
 import { BacktestPanel } from './BacktestPanel'
 import { Coin } from './CoinIcon'
 import { EquityChart } from './EquityChart'
+import { MarketPanel } from './MarketList'
 import { Narrator } from './Narrator'
 import { ValidationPanel } from './ValidationPanel'
 import { useBotSocket } from './useBotSocket'
-import type { BotState, EventDto, MoverDto, NearSignalDto, PositionDto, TradeDto } from './types'
+import type { BotState, EventDto, NearSignalDto, PositionDto, TradeDto } from './types'
 import './App.css'
 
 const fmt = (n: number | undefined | null, d = 2) =>
@@ -269,25 +270,6 @@ function Trades({ sessionCount }: { sessionCount: number }) {
   )
 }
 
-function Movers({ title, rows }: { title: string; rows: MoverDto[] }) {
-  return (
-    <div className="movers">
-      <h3>{title}</h3>
-      <div className="movers-grid">
-        {rows.map((m) => (
-          <div key={m.symbol} className="mover">
-            <Coin symbol={m.symbol} size={18} />
-            <span className="price">{fmtPrice(m.last_price)}</span>
-            <span className={`chg ${pnlClass(m.change_pct)}`}>
-              {m.change_pct > 0 ? '+' : ''}{fmt(m.change_pct, 1)}%
-            </span>
-          </div>
-        ))}
-      </div>
-    </div>
-  )
-}
-
 /** Muestra que el bot está vivo aunque no haya operaciones todavía. */
 function Diagnostics({ state }: { state: BotState | null }) {
   if (!state || state.status !== 'running') return null
@@ -412,8 +394,7 @@ export default function App() {
           </div>
           <div className="card">
             <h2>Cómo va el mercado</h2>
-            <Movers title="Las que más suben hoy" rows={state?.top_movers ?? []} />
-            <Movers title="Las que más bajan hoy" rows={state?.bottom_movers ?? []} />
+            <MarketPanel state={state} />
           </div>
         </section>
       ) : (

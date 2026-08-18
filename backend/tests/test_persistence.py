@@ -121,3 +121,32 @@ def test_counters_survive_restart():
     e2.restore_state(e.to_state())
     assert e2.candles_processed == e.candles_processed
     assert e2.signals_seen == e.signals_seen
+
+
+def test_restore_survives_future_schema_changes():
+    """Si una actualización añade o quita campos a Position, el estado guardado
+    por la versión anterior debe seguir leyéndose: al desplegar en producción no
+    puede perderse una posición por un cambio de código."""
+    e = mk_engine()
+    e.on_candle_closed("AAAUSDT", [mk_candle(0, 100, 101, 99, 100)])
+    st = e.to_state()
+    # simula un estado escrito por una versión con un campo que ya no existe
+    st["positions"][0]["campo_de_una_version_vieja"] = 42
+
+    e2 = mk_engine()
+    assert e2.restore_state(st) == 1
+    assert "AAAUSDT" in e2.positions
+
+
+def test_restore_fills_defaults_for_new_fields():
+    """Y al revés: un estado antiguo al que le falta un campo nuevo debe
+    cargarse usando el valor por defecto, no fallar."""
+    e = mk_engine()
+    e.on_candle_closed("AAAUSDT", [mk_candle(0, 100, 101, 99, 100)])
+    st = e.to_state()
+    st["positions"][0].pop("bars_held")     # campo con valor por defecto
+    st["positions"][0].pop("meta")
+
+    e2 = mk_engine()
+    assert e2.restore_state(st) == 1
+    assert e2.positions["AAAUSDT"].bars_held == 0

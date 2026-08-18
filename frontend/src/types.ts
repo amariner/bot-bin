@@ -81,6 +81,8 @@ export interface BotState {
   universe_size: number
   top_movers: MoverDto[]
   bottom_movers: MoverDto[]
+  weekly_top: MoverDto[]
+  weekly_bottom: MoverDto[]
   recent_events: EventDto[]
   near_signals: NearSignalDto[]
   max_positions: number
