@@ -104,8 +104,8 @@ Dónde sí encaja:
 ### Railway (paso a paso)
 
 1. **New Project → Deploy from GitHub repo →** `amariner/bot-bin`. Railway
-   detecta el `Dockerfile` y el `railway.json` (healthcheck `/health`,
-   reinicio automático).
+   detecta solo el `Dockerfile` de la raíz. En Settings → Deploy conviene
+   poner **Healthcheck Path** `/health` y **Restart Policy** *Always*.
 2. **⚠️ Cambia la región a Europa ANTES de desplegar**: Settings → Deploy →
    Region → *Europe West (Amsterdam)*. Por defecto Railway despliega en
    EE. UU. y **Binance responde HTTP 451 a las IPs estadounidenses**: el bot

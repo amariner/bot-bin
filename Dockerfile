@@ -16,11 +16,12 @@ COPY backend/validation ./validation
 # main.py busca el build en ../frontend/dist relativo a backend/
 COPY --from=frontend /app/frontend/dist /app/frontend/dist
 
-# Estado (SQLite + caché de históricos) fuera de la imagen, en un volumen
+# Estado (SQLite + caché de históricos) fuera de la imagen, en /data.
+# Sin instrucción VOLUME: Railway y otros PaaS gestionan ellos el montaje y
+# declararlo aquí les interfiere. En local lo mapea docker-compose.
 ENV BOT_DB_PATH=/data/bot.db \
     BOT_DATA_DIR=/data \
     BOT_AUTOSTART=1
-VOLUME /data
 EXPOSE 8000
 
 # Railway (y otros PaaS) inyectan el puerto en $PORT; en local cae a 8000.
