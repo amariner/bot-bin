@@ -116,6 +116,37 @@ agotada; lo único que queda es paper trading prolongado.**
   **407**. `BOT_TRUST_ENV_PROXY=1` lo reactiva.
 - Python 3.9: `Optional[...]`, nunca `X | None` en anotaciones runtime.
 
+## Resistencia a caídas ("que se levante solo")
+
+Capas, de fuera hacia dentro. Ninguna sustituye a las otras:
+
+| Patada | Qué la absorbe |
+|---|---|
+| Proceso muere / servidor cae | Railway `restartPolicyType: ALWAYS` levanta otro contenedor |
+| Contenedor nuevo (caída o actualización) | El estado vive en `/data` (volumen), no en la imagen |
+| Estado en memoria perdido | `TradingEngine.to_state()/restore_state()` en SQLite (`kv['engine_state']`) |
+| Actualización con SIGTERM | `@app.on_event("shutdown")` guarda antes de morir |
+| Websocket de Binance cae | `MarketStream` reconecta con backoff exponencial |
+| Binance devuelve 407/429/5xx | `BinancePublic._get` reintenta con backoff |
+| Moneda comprada sale del top-100 | `start()` la añade igualmente al stream y al warmup |
+
+Detalles que importan:
+- El estado se guarda como **un único JSON atómico**, nunca campo a campo: una
+  caída a mitad de escritura no puede dejar medio estado.
+- Se guarda tras cada evento, tras cada vela (el trailing se mueve ahí) y cada
+  30 s como red de seguridad.
+- **El freno diario se restaura activado**: reiniciar no puede usarse para
+  saltarse el límite de pérdidas del día.
+- `POST /api/bot/reset` (solo con el bot parado) borra el estado y vuelve al
+  capital inicial.
+- Estados de versión distinta se ignoran (`STATE_VERSION`): mejor arranque
+  limpio que estado corrupto.
+
+**Lo que todavía NO cubre**: en real, si el bot está caído no puede vender. Por
+eso la versión con dinero real debe colocar los stops como órdenes
+`STOP_LOSS_LIMIT` en el propio Binance y reconciliar contra la cuenta al
+arrancar (ver "Próximos pasos").
+
 ## Panel y despliegue
 
 - La UI muestra: feed de actividad (eventos `open`/`close`/`signal_skipped` con

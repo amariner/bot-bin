@@ -3,6 +3,7 @@
 La misma lógica de entradas, stops, take-profits y riesgo procesa velas cerradas
 en ambos modos: lo que se backtestea es exactamente lo que corre en vivo.
 """
+from dataclasses import asdict
 from typing import Dict, List, Optional
 
 from ..config import settings
@@ -157,6 +158,59 @@ class TradingEngine:
         if price >= pos.take_profit:
             return self._close_position(pos, price, ts, "take-profit")
         return None
+
+    # ------------------------------------------------- persistencia de estado
+
+    STATE_VERSION = 1
+
+    def to_state(self) -> dict:
+        """Foto completa del motor. Se guarda como un único JSON para que la
+        escritura sea atómica: o se guarda todo, o no se guarda nada. Nunca
+        puede quedar medio estado tras una caída."""
+        return {
+            "version": self.STATE_VERSION,
+            "strategy": self.strategy.name,
+            "cash": self.cash,
+            "initial_capital": self.initial_capital,
+            "positions": [asdict(p) for p in self.positions.values()],
+            "risk": {
+                "day_start_ts": self.risk.day_start_ts,
+                "day_start_equity": self.risk.day_start_equity,
+                "halted": self.risk.halted,
+            },
+            "counters": {
+                "candles_processed": self.candles_processed,
+                "signals_seen": self.signals_seen,
+                "signals_rejected_risk": self.signals_rejected_risk,
+                "signals_rejected_regime": self.signals_rejected_regime,
+            },
+        }
+
+    def restore_state(self, st: dict) -> int:
+        """Reconstruye el motor desde una foto previa. Devuelve el número de
+        posiciones recuperadas. Tolera estados de versiones anteriores."""
+        if not st or st.get("version") != self.STATE_VERSION:
+            return 0
+        self.cash = float(st["cash"])
+        self.initial_capital = float(st.get("initial_capital", self.initial_capital))
+        self.positions = {}
+        for d in st.get("positions", []):
+            data = dict(d)
+            data.setdefault("meta", {})
+            pos = Position(**data)
+            self.positions[pos.symbol] = pos
+            # sin precio de mercado todavía, el equity parte del de entrada
+            self.last_prices.setdefault(pos.symbol, pos.entry_price)
+        r = st.get("risk") or {}
+        self.risk.day_start_ts = r.get("day_start_ts")
+        self.risk.day_start_equity = r.get("day_start_equity")
+        self.risk.halted = bool(r.get("halted"))
+        c = st.get("counters") or {}
+        self.candles_processed = c.get("candles_processed", 0)
+        self.signals_seen = c.get("signals_seen", 0)
+        self.signals_rejected_risk = c.get("signals_rejected_risk", 0)
+        self.signals_rejected_regime = c.get("signals_rejected_regime", 0)
+        return len(self.positions)
 
     def liquidate_all(self, ts: int, reason: str = "liquidación") -> List[dict]:
         events = []

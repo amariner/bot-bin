@@ -33,6 +33,14 @@ async def _maybe_autostart():
         asyncio.create_task(trader.start())
 
 
+@app.on_event("shutdown")
+async def _save_on_shutdown():
+    """Railway manda SIGTERM en cada actualización; guardamos antes de morir
+    para que el contenedor nuevo continúe justo donde lo dejó el viejo."""
+    logging.getLogger("main").info("apagando: guardando estado")
+    trader._save_state()
+
+
 class StartRequest(BaseModel):
     strategy: Optional[str] = None
     capital: Optional[float] = None
@@ -123,6 +131,18 @@ async def bot_start(req: StartRequest):
 async def bot_stop(liquidate: bool = False):
     await trader.stop(liquidate=liquidate)
     return {"ok": True}
+
+
+@app.post("/api/bot/reset")
+async def bot_reset():
+    """Empieza de cero: olvida posiciones y vuelve al capital inicial.
+    Solo con el bot parado, para no borrar dinero que está invertido."""
+    global trader
+    if trader.status in ("running", "warming_up"):
+        return {"ok": False, "error": "para el bot antes de reiniciar el estado"}
+    db.set_kv(LiveTrader.STATE_KEY, {})
+    trader = LiveTrader(db)
+    return {"ok": True, "message": "estado borrado; el bot arrancará limpio"}
 
 
 @app.websocket("/ws")

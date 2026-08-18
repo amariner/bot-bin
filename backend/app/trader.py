@@ -56,6 +56,12 @@ class LiveTrader:
         self.status = "warming_up"
         self.error = None
         self.started_at = int(time.time() * 1000)
+
+        # 1) Recuperar el estado anterior ANTES de nada: si el proceso se cayó
+        #    con monedas compradas, hay que seguir vigilándolas aunque ya no
+        #    estén entre las 100 de mayor volumen.
+        restored = self._restore_state()
+
         try:
             self.universe = await fetch_universe(self.client)
             for row in self.universe:
@@ -68,6 +74,12 @@ class LiveTrader:
             return
 
         symbols = [r["symbol"] for r in self.universe]
+        # Monedas recuperadas que ya no están en el universo: se vigilan igual,
+        # porque hay dinero dentro y su stop tiene que poder ejecutarse.
+        for sym in self.engine.positions:
+            if sym not in symbols:
+                symbols.append(sym)
+                log.warning("posición recuperada fuera del universo: %s", sym)
         # BTC hace falta para el filtro de régimen aunque no sea operable
         if self.regime is not None and "BTCUSDT" not in symbols:
             symbols.append("BTCUSDT")
@@ -82,7 +94,9 @@ class LiveTrader:
         ]
         self.status = "running"
         self._persist_event({"type": "start", "strategy": self.strategy_name,
-                             "universe": len(symbols), "capital": self.engine.cash})
+                             "universe": len(symbols), "capital": self.engine.cash,
+                             "restored": restored})
+        self._save_state()
         await self.broadcast(force=True)
 
     async def _warmup(self):
@@ -98,7 +112,9 @@ class LiveTrader:
                     cs.pop()  # la última puede estar sin cerrar
                 self.candles[sym] = deque(cs, maxlen=settings.candle_history)
 
-        await asyncio.gather(*(fetch(r["symbol"]) for r in self.universe))
+        # el universo más las monedas ya compradas (que pueden haber salido de él)
+        wanted = {r["symbol"] for r in self.universe} | set(self.engine.positions)
+        await asyncio.gather(*(fetch(s) for s in wanted))
 
         # El filtro de régimen necesita histórico de BTC aunque BTC no esté
         # en el universo operable
@@ -127,6 +143,7 @@ class LiveTrader:
             for ev in self.engine.liquidate_all(now, "parada manual"):
                 self._persist_event(ev)
         self.status = "stopped"
+        self._save_state()
         self._persist_event({"type": "stop"})
         await self.broadcast(force=True)
 
@@ -145,6 +162,9 @@ class LiveTrader:
         events = self.engine.on_candle_closed(symbol, list(dq))
         for ev in events:
             self._persist_event(ev)
+        # el trailing se mueve en cada vela aunque no haya evento: hay que
+        # guardarlo o un reinicio devolvería el stop a una posición antigua
+        self._save_state()
         if events:
             await self.broadcast(force=True)
 
@@ -157,9 +177,46 @@ class LiveTrader:
         ev = self.engine.check_tick_exit(symbol, price, int(time.time() * 1000))
         if ev:
             self._persist_event(ev)
+            self._save_state()
             await self.broadcast(force=True)
         else:
             await self.broadcast()  # rate-limited
+
+    # ------------------------------------------------ estado que sobrevive
+
+    STATE_KEY = "engine_state"
+
+    def _save_state(self):
+        """Escritura atómica del estado completo. Se llama tras cada cambio
+        relevante, así que una caída pierde como mucho lo ocurrido entre dos
+        eventos, nunca deja el estado a medias."""
+        try:
+            st = self.engine.to_state()
+            st["saved_at"] = int(time.time() * 1000)
+            st["timeframe"] = settings.timeframe
+            self.db.set_kv(self.STATE_KEY, st)
+        except Exception:
+            log.exception("no se pudo guardar el estado")
+
+    def _restore_state(self) -> int:
+        """Devuelve cuántas posiciones se han recuperado."""
+        try:
+            st = self.db.get_kv(self.STATE_KEY)
+        except Exception:
+            log.exception("no se pudo leer el estado guardado")
+            return 0
+        if not st:
+            log.info("sin estado previo: arranque limpio")
+            return 0
+        if st.get("strategy") != self.strategy_name:
+            log.warning("el estado guardado es de la estrategia '%s' y ahora se usa "
+                        "'%s'; se recuperan las posiciones igualmente (hay dinero dentro)",
+                        st.get("strategy"), self.strategy_name)
+        n = self.engine.restore_state(st)
+        age_min = (int(time.time() * 1000) - st.get("saved_at", 0)) / 60000
+        log.info("estado recuperado: %d posiciones, %.2f USDT libres, guardado hace %.0f min",
+                 n, self.engine.cash, age_min)
+        return n
 
     def _persist_event(self, ev: dict):
         now = int(time.time() * 1000)
@@ -201,6 +258,7 @@ class LiveTrader:
             now = int(time.time() * 1000)
             self.db.insert_equity(now, self.engine.equity(), self.engine.cash,
                                   len(self.engine.positions))
+            self._save_state()   # red de seguridad periódica
 
     # ---------------------------------------------------------------- estado UI
 

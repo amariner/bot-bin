@@ -150,9 +150,32 @@ El panel no lleva login todavía. Opciones, de menos a más trabajo:
 3. **Tailscale** si solo quieres acceder tú desde tus dispositivos, sin URL
    pública.
 
-**Limitación conocida**: si el proceso se reinicia con posiciones abiertas, esas
-posiciones no se recuperan (el historial de operaciones cerradas sí). Está en la
-lista de próximos pasos.
+### Resistencia a caídas
+
+El bot está pensado para levantarse solo después de cualquier golpe:
+
+| Qué pasa | Quién lo absorbe |
+|---|---|
+| El proceso muere o el servidor se cae | Railway lo relanza (`restartPolicyType: ALWAYS`) |
+| Contenedor nuevo (caída o actualización) | El estado vive en el volumen `/data`, no en la imagen |
+| Se pierde todo lo que había en memoria | Al arrancar recupera de SQLite: monedas compradas, stop dinámico ya movido, dinero libre y freno diario |
+| Actualización (Railway manda SIGTERM) | Guarda el estado antes de morir |
+| Se cae la conexión con Binance | El websocket reconecta con espera progresiva |
+| Binance devuelve 407/429/5xx | Reintentos automáticos con espera progresiva |
+| Una moneda comprada sale del top-100 | Se sigue vigilando igualmente para poder venderla |
+
+El estado se guarda como **un único JSON atómico** (nunca a medias) después de
+cada operación, de cada vela y cada 30 segundos. Probado matando el proceso con
+`kill -9` con posiciones abiertas: al reiniciar las recupera con sus cantidades
+y sus stops exactos.
+
+> ⚠️ **Sin volumen montado en `/data` nada de esto sirve en la nube**: el estado
+> se guardaría en el disco temporal del contenedor y se borraría en cada
+> actualización. Crear el volumen es el paso 3 de la guía de arriba.
+
+**Limitación real que queda**: si el bot está caído, no puede vender. En paper
+trading da igual, pero la versión con dinero real debe dejar los stops puestos
+como órdenes en el propio Binance y reconciliar contra la cuenta al arrancar.
 
 ## Testnet (opcional)
 
