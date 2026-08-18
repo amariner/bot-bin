@@ -114,8 +114,15 @@ Dónde sí encaja:
    Region → *Europe West (Amsterdam)*. Por defecto Railway despliega en
    EE. UU. y **Binance responde HTTP 451 a las IPs estadounidenses**: el bot
    arrancaría con error de universo vacío.
-3. **Añade un volumen** para que las operaciones sobrevivan a cada redeploy:
-   en el servicio, Settings → Volumes → New Volume, punto de montaje `/data`.
+3. **Añade un volumen** para que las operaciones sobrevivan a cada redeploy.
+   Ojo: **no está en Settings**. Se crea desde el lienzo del proyecto
+   (botón `+ New` o clic derecho → *Volume*, y se elige el servicio), o desde
+   la CLI, que es más directo:
+
+   ```bash
+   railway link          # elegir proyecto / entorno / servicio
+   railway volume add --mount-path /data
+   ```
 4. **Genera el dominio**: Settings → Networking → Generate Domain.
 5. Redeploy. El bot arranca solo (`BOT_AUTOSTART=1` ya viene en la imagen).
 
@@ -156,7 +163,7 @@ El bot está pensado para levantarse solo después de cualquier golpe:
 
 | Qué pasa | Quién lo absorbe |
 |---|---|
-| El proceso muere o el servidor se cae | Railway lo relanza (`restartPolicyType: ALWAYS`) |
+| El proceso muere o el servidor se cae | Railway lo relanza (`ON_FAILURE`, 10 reintentos) |
 | Contenedor nuevo (caída o actualización) | El estado vive en el volumen `/data`, no en la imagen |
 | Se pierde todo lo que había en memoria | Al arrancar recupera de SQLite: monedas compradas, stop dinámico ya movido, dinero libre y freno diario |
 | Actualización (Railway manda SIGTERM) | Guarda el estado antes de morir |

@@ -122,7 +122,7 @@ Capas, de fuera hacia dentro. Ninguna sustituye a las otras:
 
 | Patada | Qué la absorbe |
 |---|---|
-| Proceso muere / servidor cae | Railway `restartPolicyType: ALWAYS` levanta otro contenedor |
+| Proceso muere / servidor cae | Railway relanza el contenedor (`restartPolicyType: ON_FAILURE`, 10 reintentos; `ALWAYS` requiere plan de pago) |
 | Contenedor nuevo (caída o actualización) | El estado vive en `/data` (volumen), no en la imagen |
 | Estado en memoria perdido | `TradingEngine.to_state()/restore_state()` en SQLite (`kv['engine_state']`) |
 | Actualización con SIGTERM | `@app.on_event("shutdown")` guarda antes de morir |
