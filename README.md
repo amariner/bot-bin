@@ -104,8 +104,12 @@ Dónde sí encaja:
 ### Railway (paso a paso)
 
 1. **New Project → Deploy from GitHub repo →** `amariner/bot-bin`. Railway
-   detecta solo el `Dockerfile` de la raíz. En Settings → Deploy conviene
-   poner **Healthcheck Path** `/health` y **Restart Policy** *Always*.
+   detecta el `Dockerfile` de la raíz y el `railway.json` (healthcheck
+   `/health`, reinicio automático).
+
+   > El Dockerfile **no** lleva instrucción `VOLUME`: Railway la rechaza con
+   > *"docker VOLUME is not supported, use Railway Volumes"* y el build falla.
+   > La persistencia se configura en el paso 3.
 2. **⚠️ Cambia la región a Europa ANTES de desplegar**: Settings → Deploy →
    Region → *Europe West (Amsterdam)*. Por defecto Railway despliega en
    EE. UU. y **Binance responde HTTP 451 a las IPs estadounidenses**: el bot
